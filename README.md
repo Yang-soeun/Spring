@@ -1,6 +1,24 @@
 
 # Spring_Study
+<details>
 
+<summary> ✔ Intellij 단축키 </summary>
+<div markdown="1">
+
+#### Preferences->  `Crtl + Akt + S `
+#### refactor -> ` Crtl + Alt + M `
+#### getter setter -> `Alt + insert `
+#### create new Test -> ` Crtl + Shift + T `
+#### static import -> `Alt + Enter `
+#### 변수 이름 한번에 바꾸기 -> ` Shift + F6 `
+#### 실행 -> ` Crtl + Shift + F10 `
+#### 주석처리 ` Crtl + / `
+#### method명 출력  `soutm`
+#### 변수명 출력  `sout`
+#### 코드복사  'Crtl + d'
+#### 바로 다음줄로  'Crtl + Shift + Enter'
+
+</div>
 </details>
 
 ## 📒 스프링 핵심 원리 -기본
