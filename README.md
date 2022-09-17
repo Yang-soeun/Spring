@@ -1373,7 +1373,7 @@ public class SpringMemberControllerV3 {
     - HTTP API에서 주로 사용, JSON< XML, TEXT
     - 데이터 형식은 주로 JSON 사용
     - POST, PUT, PATHCH
-[링크로 연결](README.md)
+[링크로 연결](JAVA.md)
     </div>
 </details>
 
