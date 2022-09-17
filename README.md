@@ -1358,38 +1358,7 @@ public class SpringMemberControllerV3 {
 - 매핑: `/hello-basic`
 - URL 요청: `/hello-basic', `/hello-basic/`
     - 요청 URL이 다르지만 스프링은 같은 요청으로 매핑한다.
-  
-### HTTP 메서드
-- `RequestMapping`에 `method` 속성으로 HTTP 메서드를 지정하지 않으면 HTTP 메서드와 무관하게 호출된다.
-
-### 요청 매핑 - API 예시
-- 회원 목록 조회: GET `/users`
-- 회원 등록: POST `/users`
-- 회원 조회: GET `/users/{userId}`
-- 회원 수정: PATCH `/users/{userId}`
-- 회원 삭제: DELETE `/users/{userId]`
- 
-### HTTP 요청- 기본, 헤더 조회
-- `HttpServletRequest`
-- `HttpServletResponse`
-- `HttpMethod`: HTTP 메서드를 조회.
-- `Locale`: Locale 정보를 조회.
-- `@RequestHeader MultiValueMap<String, String> headerMap`
-    - 모든 HTTP 헤더를 MultiValueMap 형식으로 조회.
-    - `MultiValueMap`
-        - MAP과 유사한데, 하나의 키에 여러 값을 받을 수 있다.
-        - HTTP header, HTTP 쿼리 파라미터와 같이 하나의 키에 여러 값을 받을때 사용.
-- `@RequestHeader("host") String host`
-    - 특정 HTTP 헤더를 조회.
-    - 속성
-        - 필수값 여부: `required`
-        - 기본 값 속성: `defaultValue`
-- `CookieValue(value = "myCookie", required = false) String cookie`
-    - 특정 쿠키를 조회.
-    - 속성
-        - 필수 값 여부: `required`
-        - 기본 값: `defaultValue`
-        
+       
 ### HTTP 요청 파라미터 - 쿼리 파라미터, HTML Form
 #### ❗ 클라이언트에서 서버로 요청 데이터 전달하는 3가지 방법
 - 1️⃣ GET - 쿼리 파라미터
@@ -1404,14 +1373,7 @@ public class SpringMemberControllerV3 {
     - HTTP API에서 주로 사용, JSON< XML, TEXT
     - 데이터 형식은 주로 JSON 사용
     - POST, PUT, PATHCH
-    
-### 📑 HTTP 요청 파라미터 - @RequestParam
-- `@RequestParam`: 파라미터 이름으로 바인딩
-- `@ResponseBody`: View 조회를 무시하고, HTTP message body에 직접 해당 내용 입력
-- `@RequestParam`의 `name(value)` 속성이 파라미터 이름으로 사용
-    - `@RequestParam("username") String memberName` -> `request.getParameter("username")`
-- HTTP 파라미터 이름이 변수 이름과 같으면 `@RequestParam(name="xx")` 생략 가능
-
+[링크로 연결](README.md)
     </div>
 </details>
 
