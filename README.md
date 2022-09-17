@@ -59,7 +59,7 @@
 </div>
 </details>
 
-## 📒 [스프링 핵심 원리 -기본](스프링 핵심원리-기본.md)
+## 📒 [스프링 핵심 원리](Spring-basic.md)
 ## 📘 [HTTP](HTTP.md)
 ## 📙 [MVC-1](MVC-1.md)
 ## 📕 [MVC_2](MVC-2.md)
