@@ -1350,7 +1350,7 @@ public class SpringMemberControllerV3 {
 - `@RestController`
     - `@Controller`는 반환값이 `String`이면 뷰 이름으로 인식. 그래서 뷰를 찾고 뷰가 랜더링 된다.
     - `@RestController`는 반환값으로 뷰를 찾는것이 아니라, HTTP 메시지 바디에 바로 입력한다.
-- `@RequestMappint("/hello-basic)`
+- `@RequestMapping("/hello-basic)`
     - `/hello-basic` URL 호출이 오면 이 메서드가 실행되도록 매핑.
     - 대부분의 속성을 배열로 제공하므로 다중 설정이 가능하다.
         - `{"/hello-basic", "/hello-go"}`
