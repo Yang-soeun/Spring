@@ -88,30 +88,30 @@
   <details>
   <summary> 쿠키, 세션 </summary>
   <div markdonw = "2">
-
-    ### 쿠키 생성
+    
+### 쿠키 생성
     ![image](https://user-images.githubusercontent.com/87464750/191488776-442ec51f-3ad9-4526-9b64-dfc948869e42.png)
 
-    ### 클라이언트 쿠키 전달1
-    ![image](https://user-images.githubusercontent.com/87464750/191488809-ee2e59ca-bead-49be-a397-3aa8158e9804.png)
+### 클라이언트 쿠키 전달1
+![image](https://user-images.githubusercontent.com/87464750/191488809-ee2e59ca-bead-49be-a397-3aa8158e9804.png)
 
-    ### 클라이언트 쿠키 전달2
-    ![image](https://user-images.githubusercontent.com/87464750/191488841-e90dbea0-411d-4c07-a354-a9c7f56d3495.png)
+### 클라이언트 쿠키 전달2
+![image](https://user-images.githubusercontent.com/87464750/191488841-e90dbea0-411d-4c07-a354-a9c7f56d3495.png)
 
-    - 영속 쿠키: 만료 날짜를 입력하면 해당 날짜까지 유지
-    - 세션 쿠키: 만료 날짜를 생략하면 브라우저 종류시 까지만 유지
+- 영속 쿠키: 만료 날짜를 입력하면 해당 날짜까지 유지
+- 세션 쿠키: 만료 날짜를 생략하면 브라우저 종류시 까지만 유지
     
-    #### 쿠키 생성 로직
-    ``` JAVA
-    Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
-    response.addCookie(idCookie);
-    ```
+#### 쿠키 생성 로직
+``` JAVA
+  Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+  response.addCookie(idCookie);
+```
     
-    - 로그인에 성공하면 쿠키를 생성하고 HttpServletResponse에 담는다.
-    - 쿠키 이름은 memberId이고, 값은 회원의 id를 담아둔다.
-    - 웹 브라우저 종료전까지 회원의 id를 서버에 계속 보내줄것이다.
+- 로그인에 성공하면 쿠키를 생성하고 HttpServletResponse에 담는다.
+- 쿠키 이름은 memberId이고, 값은 회원의 id를 담아둔다.
+- 웹 브라우저 종료전까지 회원의 id를 서버에 계속 보내줄것이다.
 
-    #### 로그아웃
+#### 로그아웃
     
    </div>
 </details>
