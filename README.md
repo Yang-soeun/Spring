@@ -55,6 +55,28 @@
   </div>
 </details>
 
+<details>
+  <summary> Exception in thread "main" java.lang.NoClassDefFoundError: javax/xml/bind/JAXBException </summary>
+  <div markdonw = "2">
+  
+  - JAVA11에서 발생
+  
+  ![image](https://user-images.githubusercontent.com/87464750/192098990-1a614e1b-08f7-4006-861b-768c0016136e.png)
+
+-  해결방법
+- pom.xm1에 코드 추가
+
+```
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+     <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
+ </dependency>
+```
+
+  </div>
+</details>
+
 
 </div>
 </details>
