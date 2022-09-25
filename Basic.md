@@ -96,3 +96,105 @@ em.persist(member);
   
   </div>
 </details>
+
+<details>
+
+<summary> 📑 엔티티 매핑 </summary>
+<div markdown="1">
+  
+## ✏ 객체와 테이블 매핑
+### @Entity
+- @Entity가 붙은 클래스는 JPA가 관리, 엔티티라한다
+- JPA를 사용해서 테이블과 매핑할 클래스는 @Entity 필수
+- ❗ 주의
+    - 기본 생성자 필수(파라미터가 없는 public 또는 protected 생성자)
+    - final 클래스, enum, interface, inner 클래스 사용 X
+    - 저장할 필드에 final 사용 X
+#### 속성
+- name
+  - JPA에서 사용할 엔티티 이름을 지정
+  - 기본값: 클래스 이름을 그대로 사용
+  - 같은 클래스 이름이 없으면 가급적 기본값을 사용
+  
+### @Table
+- 엔티티와 매핑할 테이블 지정
+  
+| 속성 | 기능 | 기본값 |
+| :---: | :----: | :----: |     
+|name|매핑할 테이블 이름|엔티티 이름을 사용|
+|catalog|데이터베이스 catalog 매핑||
+|schema|데이터베이스 schema 매핑||
+|uniqueConstraints(DDL)|DDL 생성시에 유니크 제약조건 생성||
+  
+## ✏ 데이터베이스 스키마 자동 생성
+- DDL을 애플리케이션 실행 시점에 자동 생성
+- 테이블 중심 -> 객체 중심
+- 데이터베이스 방언을 활용해서 데이터베이스에 맞는 적절한 DDL 생성 -> 이렇게 생성된 DDL은 개발 장비에서만 사용
+
+### 속성 - `hibernate.hbm2ddl.auto`
+  
+| 옵션| 설명|
+| :---: | :----: |    
+|create| 기존 테이블 삭제 후 다시 생성(DROP + CREATE)|
+|create-top| create와 같으나 종료시점에 테이블 DROP|
+|update| 변경분만 반영|
+|validate|엔티티와 테이블이 정상 매핑되었는지만 확인|
+|none|사용하지 않음|
+  
+### DDL 생성기능
+- 제약조건 추가: 회원 이름은 필수, 10자 초과 X
+  - @Column(nullable = false, length = 10)
+- 유니크 제약조건 추가
+  - @Table(uniqueConstraints = {@UniqueConstraint( name = "NAME_AGE_UNIQUE", columnNames = {"NAME", "AGE"} )})
+- DDL 생성 기능은 DDL을 자동 생성할때만 사용되고 JPA 실행 로직에는 영향을 주지 않다
+  
+## ✏ 필드와 컬럼 매핑
+### 매핑 애노테이션
+#### @Column
+- 컬럼 매핑
+  
+| 속성 | 설명 | 기본값 |
+| :---: | :----: |  :----: |      
+| name | 필드와 매핑할 테이블의 컬럼 이름 | 객체의 필드 이름|
+| insertable, updatable | 등록, 변경 가능 여부 | TRUE |
+| nullable(DDL) | null 값의 허용 여부를 결정, false로 결정하면 DDL 생성시에 not null 제약조건이 붙는다 ||  
+| unique(DDL) | @Table의 uniqueConstraints와 같지만 한 컬럼에 간단히 유니크 제약조건을 걸 때 사용||    
+| columnDefinition(DDL) | 데이터베이스 컬럼 정보를 직접 줄 수 있다 | 필드의 자바 타입과 방언 정보를 사용|    
+| length(DDL)| 문자 길이 제약조건, String 타입에만 사용| 255|    
+|precison, scale(DDL)| BigDecimal 타입에서 사용한다(BigInteger도 사용 가능), precision은 소수점을 포함한 전체 자리수를, scale은 소수의 자리수다. </br> double, float 타입에는 적용되지 않음, 아주 큰 숫자나 정밀한 소수를 다루어야 할때만 사용| precision = 19, scale = 2|    
+  
+#### @Enumerated
+- 자바 enum 타입을 매핑할때 사용
+- ❗ ORDINAL 사용 X
+  
+| 속성 | 설명 | 기본값 |
+| :---: | :----: |  :----: |   
+|value| EnumType.ORDINAL: enum 순서를 데이터베이스에 저장 </br> EnumType.STRING: enum 이름을 데이터베이스에 저장 | EnumType.ORDINAL |
+
+#### Temporal
+- 날짜 타입을 매핑할때 사용
+- LocalDate, LocalDateTime을 사용할 때는 생략 가능(최신 하이버네이트 지원)
+
+| 속성 | 설명 | 기본값 |
+| :---: | :----: |  :----: |  
+|value| TemporalType.DATE: 날짜, 데이터베이스 date 타입과 매핑 (ex) 2013-10-11) </br> TemporalType.TIME: 시간, 데이터베이스 time 타입과 매핑(ex) 11:11:11) </br> TemporalType.TIMESTAMP: 날짜와 시간, 데이터베이스 timestamp 타입과 매핑(ex) 2013-10-11 11:11:11)||
+
+#### @Lob
+- 데이터베이스 BLOB, CLOB 타입과 매핑
+- @Lob에는 지정할 수 있는 속성이 없다.
+- 매핑하는 필드 타입이 문자면 CLOB 매핑, 나머지는 BLOB 매핑
+  - CLOB: String, char[], java.sql.CLOB
+  - BLOB: byte[], java.sql.BLOB
+
+#### @Transient
+- 필드 매핑X
+- 데이터베이스 저장X, 조회X
+- 주로 메모리상에서만 임시로 어떤 값을 보관하고 싶을 때 사용
+```
+@Transient
+private Integer temp;
+```
+  
+  </div>
+</details>
+
