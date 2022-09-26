@@ -87,4 +87,4 @@
 ### 📕 [MVC-2](MVC-2.md)
 
 # JPA
-### 📒[Basic](Basic.md)
+### 📒[Basic](JPA-Basic.md)
