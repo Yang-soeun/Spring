@@ -194,7 +194,73 @@ em.persist(member);
 @Transient
 private Integer temp;
 ```
+
+## ✏ 기본 매핑
+#### 기본 키 매핑 애노테이션
+- @Id
+- @GeneratedValue
   
+### 기본 키 매핑 방법
+- 직접할당: @Id 만 사용
+- 자동생성: @GeneratedValue
+    - IDENTITY: 데이터베이스에 위임, MYSQL
+    - SEQUENCE: 데이터베이스 시퀀스 오브젝트 사용, ORACLE
+        - @SequenceGenerator 필요
+    - TABLE: 키 생성용 테이블 사용, 모든 DB에서 사용
+        - @TableGenerator
+    - AUTO: 방언에 따라 자동 지정, 기본값
+
+### IDENTITY
+#### 특징
+- 기본 키 생성을 데이터베이스에 위임
+- JPA는 보통 트랜잭션 커밋 시점에 INSERT SQL 실행
+- AUTO_INCREMENT는 데이터베이스에 INSERT SQL 실행
+- IDENTITY 전략은 em.persisit() 시점에 즉시 INSERT SQL 실행하고 DB에서 식별자를 조회
+- 
+#### 매핑
+
+```JAVA
+@Entity 
+public class Member { 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id; 
+```
+
+### SEQUENCE
+#### 특징
+- 데이터베이스 시퀀스는 유일한 값을 순서대로 생성하는 특별한 데이터베이스 오브젝트
+
+#### 매핑
+``` JAVA
+@Entity 
+@SequenceGenerator( 
+    name = “MEMBER_SEQ_GENERATOR", 
+    sequenceName = “MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+    initialValue = 1, allocationSize = 1) 
+public class Member { 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, 
+        generator = "MEMBER_SEQ_GENERATOR") 
+    private Long id; 
+```
+
+#### @SequenceGenerator
+- 주의: allocationSize 기본값 = 50
+
+| 속성 | 설명 | 기본값 |
+| :---: | :----: |  :----: |  
+|name| 식별자 생성기 이름|필수|
+|sequenceName|데이터베이스에 등록되어 있는 시퀀스 이름|hibernate_sequence|
+|initialValue|DDL 생성시에만 사용됨, 시퀀스 DDL을 생성할때 처음 1 시작하는 수를 지정한다|1|
+|allocationSize|시퀀스 한번 호출에 증가하는 수(성능 최적화에 사용됨, 데이터베이스 시퀀스 값이 하나씩 증가하도록 설정되어 있으면 이 값을 반드시 1로 설정해야 한다.)|50|
+|catalog, schema|데이터베이스 catalog, schema 이름||
+
+
+### 💡 권장하는 식별자 전략
+- 기본키 제약 조건: null 아님, 유일, 변하면 안된다
+- Long형 + 대체키 + 키 생성전략 사용
+
   </div>
 </details>
 
