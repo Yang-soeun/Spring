@@ -77,6 +77,22 @@
   </div>
 </details>
 
+<details>
+  <summary> H2 Database 연결(not found 오류❗) </summary>
+  <div markdonw = "2">
+  
+ ### 1️⃣ bin-> h2.bat 실행
+ ### 2️⃣ 데이터베이스 생성
+  ![image](https://user-images.githubusercontent.com/87464750/198990301-32baf5a1-3efb-41d2-80a8-bf7ccc38593c.png)
+
+- Generic H2(Embedded) 선택
+- JDBC URL에 jdbc:h2~/(원하는 데이터 베이스 이름) 입력
+
+### 3️⃣ Generic H2(Server)로 변경하고 접속
+
+   </div>
+</details>
+
 
 </div>
 </details>
