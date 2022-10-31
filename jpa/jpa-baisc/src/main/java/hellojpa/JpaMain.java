@@ -16,12 +16,12 @@ public class JpaMain {
 
         //code
         try{
-
+            //비영속 상태
 //            Member member = new Member();
 //            member.setId(2L);
 //            member.setName("HelloB");
 //
-//            em.persist(member);//멤버 저장방법
+//            em.persist(member);//저장, 영속상태
 
             //수정할떄
             Member findMember = em.find(Member.class, 1L);
