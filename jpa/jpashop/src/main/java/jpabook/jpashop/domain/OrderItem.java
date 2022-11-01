@@ -2,51 +2,57 @@ package jpabook.jpashop.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrderItem {
-
     @Id @GeneratedValue
-    @Column(name = "OERDER_ID")
+    @Column(name = "OERDER_ITEM_ID")
     private Long id;
+//    @Column(name = "OERDER_ID")
+//    private Long orderid;
+//    @Column(name = "ITEM_ID")
+//    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "ORDER_ID")
+    private Order order;
+    @ManyToOne
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    @Column(name = "MEMBER_ID")
-    private Long memberId;
-
-    private LocalDateTime orderDate;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
+    private int orderPrice;
+    private int count;
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Long getMemberId() {
-        return memberId;
+    public Order getOrder() {
+        return order;
     }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public Item getItem() {
+        return item;
     }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+    public void setItem(Item item) {
+        this.item = item;
     }
-
-    public OrderStatus getStatus() {
-        return status;
+    public int getOrderPrice() {
+        return orderPrice;
     }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setOrderPrice(int orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+    public int getCount() {
+        return count;
+    }
+    public void setCount(int count) {
+        this.count = count;
     }
 }
