@@ -20,9 +20,6 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
     private Item item;
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<>();
-
     private int orderPrice;
     private int count;
     public Long getId() {

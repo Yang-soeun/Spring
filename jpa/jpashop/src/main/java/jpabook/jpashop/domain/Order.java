@@ -2,11 +2,12 @@ package jpabook.jpashop.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ORDERS")
 public class Order {
-
     @Id  @GeneratedValue
     @Column(name = "ORDER_ID")
     private Long id;
@@ -17,6 +18,14 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    //일대일 관계
+    @OneToOne
+    @JoinColumn(name = "DELIVERY_ID")
+    private Delivery delivery;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
     private LocalDateTime orderDate;
     @Enumerated(EnumType.STRING) //ORDINAL을 사용하면 순서가 꼬여서 장애가 발생할 수 있으므로 STRING으로 해주기
     private OrderStatus status;
