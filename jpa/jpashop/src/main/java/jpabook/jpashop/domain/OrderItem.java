@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class OrderItem {
+public class OrderItem extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "OERDER_ITEM_ID")
     private Long id;
