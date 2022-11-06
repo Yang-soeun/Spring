@@ -394,4 +394,46 @@ public class Member {
   
   </div>
 </details>
+  
+<details>
 
+<summary> 📑 프록시 </summary>
+<div markdown="1">
+  
+### 프록시 특징
+  - 실제 클래스를 상속 받아서 만들어짐
+  - 실제 객체의 참조(target)를 보관
+  - 프록시 객체를 호출하면 프록시 객체는 실제 객체의 메소드 호출
+  
+### 프록시 객체의 초기화
+  ``` JAVA
+  Member member = em.getReference(Member.class, "id1");
+  member.getName();
+  ```
+  
+![image](https://user-images.githubusercontent.com/87464750/200168186-d0bfaf28-4f6b-4843-ac3e-9f72023d21c1.png)
+  
+  - 프록시 객체는 처음 사용할때 한번만 초기화
+  - 프록시 객체를 초기화 할때, 프록시 객체가 실제 엔티티로 바뀌는 것은 아님
+    - 초기화되면 프록시 객체를 통해서 실제 엔티티에 접근 가능
+  - 타입 체크시 주의! (== 대신instance of 사용 ❕❕)
+  - 영속성 컨텍스트에 찾는 엔티티가 이미 있으면 em.getReference()를 호출해도 실제 엔티티 반환❗
+  - 영속성 컨텍스트의 도움을 받을 수 없는 준영속 상태일때, 프록시를 초기화하면 문제발생❗
+  
+### 프록시 확인
+  - 프록시 인스턴스의 초기화 여부 확인
+  
+  `PersistenceUnitUtil.isLoaded(Object entity)`
+  
+  - 프록시 클래스 확인 방법
+  
+  `entity.getClass().getName()`
+  
+  - 프록시 강제 초기화
+  
+  `org.hibernate.Hibernate.initialize(entity); `
+  
+  
+
+  </div>
+</details>
