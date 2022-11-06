@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 public class OrderItem extends BaseEntity{
     @Id @GeneratedValue
@@ -14,10 +16,10 @@ public class OrderItem extends BaseEntity{
 //    private Long orderid;
 //    @Column(name = "ITEM_ID")
 //    private Long memberId;
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ITEM_ID")
     private Item item;
     private int orderPrice;
