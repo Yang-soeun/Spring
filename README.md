@@ -93,6 +93,18 @@
    </div>
 </details>
 
+<details>
+  <summary> No runnable methods </summary>
+  <div markdonw = "2">
+  
+  ![image](https://user-images.githubusercontent.com/87464750/201090863-57421e4a-1895-4fac-9295-d693dc005017.png)
+
+### 해결방법
+#### import org.junit.jupiter.api.Test; -> import org.junit.Test;로 변경하기
+
+   </div>
+</details>
+
 
 </div>
 </details>
