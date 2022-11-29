@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -47,6 +48,9 @@ public class ItemController {
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model){
         Book item = (Book) itemService.findOne(itemId);
 
+        //준영속 상태의 객체(영속성 컨텍스트가 더이상 관리하지 않음)
+        //문제: JPA가 관리하지 않음(DB에 업데이트 되지 않는다.)
+        //수정하는 방법: 변경하는 기능 이용 또는 merge 이용
         BookForm form = new BookForm();
         form.setId(item.getId());
         form.setName(item.getName());
@@ -59,4 +63,18 @@ public class ItemController {
         return "items/updateItemForm";
     }
 
+    @PostMapping("items/{itemId}/edit")
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form){
+//        Book book = new Book();
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
+//        itemService.saveItem(book);
+
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+        return "redirect:items";
+    }
 }

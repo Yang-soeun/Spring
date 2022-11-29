@@ -18,7 +18,9 @@ public class ItemRepository {
         if(item.getId() == null){//새로 생성하는 경우
             em.persist(item);
         }else{//업데이트라고 이해
-            em.merge(item);
+            em.merge(item);//merge 파라미터의 값으로 모든 데이터를 다 변경
+            //변경감지를 사용하면 원하는 속성만 변경할 수 있지만
+            //병합을 사용하면 모든 속성이 변경된다.(병합시 값이 없으면 null로 들어가기 때문에 위험)
         }
     }
 
