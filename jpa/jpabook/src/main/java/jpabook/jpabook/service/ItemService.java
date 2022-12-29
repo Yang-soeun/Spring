@@ -28,6 +28,7 @@ public class ItemService {
     * 3. 바뀐값이 있으면 감지하고 update 쿼리를 날림
     */
     public Item updateItem(Long itemId, String name, int price, int stockQuantity){
+
         Item findItem = itemRepository.findOne(itemId);
         findItem.setName(name);
         findItem.setPrice(price);
@@ -35,6 +36,17 @@ public class ItemService {
 
         return findItem;
     }
+
+//    @Transactional//변경 감지로 데이터 변경
+//    public Item updateItem(Long itemId, Book param){
+//        Item findItem = itemRepository.findOne(itemId);
+//        findItem.setPrice(param.getPrice());
+//        findItem.setName(param.getName());
+//        findItem.setStockQuantity(param.getStockQuantity());
+//
+//        return findItem;
+//
+//    }
 
     public List<Item> findItems(){
         return itemRepository.findAll();
