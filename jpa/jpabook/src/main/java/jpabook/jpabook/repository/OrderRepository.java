@@ -1,10 +1,10 @@
 package jpabook.jpabook.repository;
 
 import jpabook.jpabook.domain.Order;
+import jpabook.jpabook.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -56,5 +56,16 @@ public class OrderRepository {
             query = query.setParameter("name", orderSearch.getMemberName());
         }
         return query.getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+        //order를 가지고 오는 쿼리
+        //LAZY 무시하고 진짜 객체에 값을 담아서 반환 - join fetch
+
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
     }
 }

@@ -22,6 +22,7 @@ public class Member {
     private Address address;
 
     //@JsonIgnore//이 정보는 제외하고 json으로 뿌림
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 

@@ -9,5 +9,4 @@ public class JpabookApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JpabookApplication.class, args);
 	}
-
 }
