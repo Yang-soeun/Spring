@@ -149,6 +149,21 @@ spring.jpa.properties.hibernate.format_sql=true
   </div>
 </details>
 
+<details>
+
+<summary> ⭐ gradle dependency </summary>
+<div markdown="1">
+
+### oauth2-client dependency
+```
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+}
+```
+  </div>
+</details>
+
+
 
 ### 📒 [스프링 핵심 원리](Spring-basic.md)
 ### 📘 [HTTP](HTTP.md)
