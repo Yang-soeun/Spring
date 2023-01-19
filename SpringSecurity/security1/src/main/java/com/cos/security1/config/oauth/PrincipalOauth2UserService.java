@@ -2,6 +2,9 @@ package com.cos.security1.config.oauth;
 
 import com.cos.security1.Repository.UserRepository;
 import com.cos.security1.config.auth.PrincipalDetails;
+import com.cos.security1.config.oauth.provider.FacebookUserInfo;
+import com.cos.security1.config.oauth.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,13 +39,26 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oauth2User = super.loadUser(userRequest);
         System.out.println("getAttributes" + oauth2User.getAttributes());
+
         //후처리 로그인 완성
-        String provider = userRequest.getClientRegistration().getClientId();//구글
-        String providerId = oauth2User.getAttribute("sub");
-        String username = provider +"-" +providerId;//충돌방지를 위해 ex) google_4164912864345
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oauth2User.getAttributes());
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
+            System.out.println("페이스북 로그인 요청");
+            oAuth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+        }else{
+            System.out.println("구글과 페이스북 지원");
+        }
+
+
+        String provider = oAuth2UserInfo.getProvider();
+        String providerId = oAuth2UserInfo.getProviderId();//구글 로그인일때는 "sub", 페이스북 로그인일때는 "id"
+        String username = provider + "_" +providerId;//충돌방지를 위해 ex) google_4164912864345
         String password = bCryptPasswordEncoder.encode("겟인데어");
         String role = "ROLE_USER";
-        String email = oauth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
 
         //중복 체크
         User userEntity = userRepository.findByUsername(username);
@@ -57,6 +73,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .providerId(providerId)
                     .build();
             userRepository.save(userEntity);
+        }else{
+            System.out.println("로그인을 이미 한적이 있습니다. 당신은 자동회원가입이 되어 있습니다.");
         }
 
         return new PrincipalDetails(userEntity, oauth2User.getAttributes());
