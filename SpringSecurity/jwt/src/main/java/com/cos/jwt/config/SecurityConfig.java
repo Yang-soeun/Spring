@@ -2,7 +2,10 @@ package com.cos.jwt.config;
 
 import com.cos.jwt.filter.MyFilter3;
 import com.cos.jwt.jwt.JwtAuthenticationFilter;
+import com.cos.jwt.jwt.JwtAuthorizationFilter;
+import com.cos.jwt.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +20,13 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig{
 
-    private final CorsFilter corsFilter;
+    @Autowired
+    private UserRepository userRepository;
 
+    @Autowired
+    private CorsConfig corsConfig;
     /*
     기존: WebSecurityConfigurerAdapter를 상속하고 configure 메소드를 오버라이딩하여 설정하는 방법
     //https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
@@ -66,10 +71,9 @@ public class SecurityConfig{
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager));
-                    //.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
+                    .addFilter(corsConfig.corsFilter())
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager))
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
         }
     }
-
-
 }
