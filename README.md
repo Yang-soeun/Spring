@@ -162,14 +162,3 @@ dependencies {
 ```
   </div>
 </details>
-
-
-
-### 📒 [스프링 핵심 원리](Spring-basic.md)
-### 📘 [HTTP](HTTP.md)
-### 📙 [MVC-1](MVC-1.md)
-### 📕 [MVC-2](MVC-2.md)
-
-# JPA
-### 📒[Basic](JPA-Basic.md)
-# WebSocket
