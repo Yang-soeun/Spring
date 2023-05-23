@@ -41,4 +41,18 @@ public class MemberJpaRepository {
         return em.find(Member.class, id);
     }//단건 조회
 
+    //순수한 jpa 조건에 맞는 회원의 나이를 한번에 증가하는 함수
+    public int bulkAgePlus(int age){
+        return em.createQuery(
+                "update Member m set m.age = m.age + 1" +
+                        " where m.age >= :age")
+                .setParameter("age", age)
+                .executeUpdate();
+    }
+    /**
+     * 벌크연산을 하는 경우 영속성 컨텍스트에 저장되는 것이 아니라 db바로 저장이 되므로
+     * 영속성 컨텍스트에는 기존의 값이 남아 있기 때문에 조회할 경우 결과가 다르게 된다.
+     * 그래서 영속성 컨텍스트에 있는 값들을 다 지워줘야함
+     * 날리는 방법: em.flush(); -> em.clear(); 두개 해주면 OK
+     */
 }
