@@ -14,7 +14,7 @@ import java.util.List;
  * 구현체가 없는 동작하는 이유: interface만 보고 스프링 데이터 jpa가 구현체(프록시 객체(?))를 만들어서 injection 해줌
  * @Repository 생략가능
  */
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> , MemberRepositoryCustom{
 
     //리포지토리 메소드에 쿼리 정의하기
     @Query("select m from Member m where m.username = :username and m.age = :age")
