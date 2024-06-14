@@ -1,20 +1,29 @@
 package study.querydsl;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.querydsl.entity.Member;
+import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Transactional
 @SpringBootTest
 public class QuerydslBasicTest {
-    @Autowired EntityManager em;
+    @PersistenceContext
+    EntityManager em;
+    JPAQueryFactory queryFactory;
 
     @BeforeEach
     public void before(){
+        queryFactory = new JPAQueryFactory(em);
+
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
         em.persist(teamA);
@@ -28,5 +37,18 @@ public class QuerydslBasicTest {
         em.persist(member2);
         em.persist(member3);
         em.persist(member4);
+    }
+
+    @Test
+    public void startQuerydsl(){
+        QMember m = new QMember("m");
+
+        Member findMember = queryFactory
+                .select(m)
+                .from(m)
+                .where(m.username.eq("member1"))//파라미터 바인딩 처리
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 }
