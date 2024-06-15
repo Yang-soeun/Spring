@@ -152,4 +152,32 @@ public class QuerydslBasicTest {
                 .extracting("username")
                 .containsExactly("member5", "member6", null);
     }
+
+    @Test
+    public void paging1(){
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1)   //몇번째부터 할것인지 0부터 시작함 1 == 1개를 skip 한다는 의미
+                .limit(2)
+                .fetch();
+
+        assertThat(result).hasSize(2);
+    }
+
+    //전체 조회 수
+    @Test
+    public void paging2(){
+        QueryResults<Member> queryResults = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1)   //몇번째부터 할것인지 0부터 시작함 1 == 1개를 skip 한다는 의미
+                .limit(2)
+                .fetchResults();
+
+        assertThat(queryResults.getTotal()).isEqualTo(4);
+        assertThat(queryResults.getLimit()).isEqualTo(2);
+        assertThat(queryResults.getOffset()).isEqualTo(1);
+        assertThat(queryResults.getResults()).size().isEqualTo(2);  //contents
+    }
 }
