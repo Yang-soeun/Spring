@@ -28,8 +28,7 @@ import static study.querydsl.entity.QTeam.team;
 @Transactional
 @SpringBootTest
 public class QuerydslBasicTest {
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext EntityManager em;
     JPAQueryFactory queryFactory;
 
     @BeforeEach

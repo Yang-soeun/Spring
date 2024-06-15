@@ -19,8 +19,7 @@ import study.querydsl.entity.Team;
 @Transactional
 @SpringBootTest
 public class QuerydslDynamicQueryTest {
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext EntityManager em;
     JPAQueryFactory queryFactory;
 
     @BeforeEach

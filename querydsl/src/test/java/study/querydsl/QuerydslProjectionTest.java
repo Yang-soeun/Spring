@@ -22,8 +22,7 @@ import study.querydsl.entity.Team;
 @SpringBootTest
 @Transactional
 public class QuerydslProjectionTest {
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext EntityManager em;
     JPAQueryFactory queryFactory;
 
     @BeforeEach
