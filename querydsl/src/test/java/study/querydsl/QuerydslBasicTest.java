@@ -1,6 +1,7 @@
 package study.querydsl;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +16,7 @@ import study.querydsl.entity.Team;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
+import static study.querydsl.entity.QTeam.team;
 
 @Transactional
 @SpringBootTest
@@ -133,7 +135,6 @@ public class QuerydslBasicTest {
         long count = queryFactory
                 .selectFrom(member)
                 .fetchCount();
-
     }
 
     @Test
@@ -166,6 +167,13 @@ public class QuerydslBasicTest {
     }
 
     //전체 조회 수
+
+    /**
+     * 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리
+     * 는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두 조인을 해버리기
+     * 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별
+     * 도로 작성해야 한다
+     */
     @Test
     public void paging2(){
         QueryResults<Member> queryResults = queryFactory
@@ -179,5 +187,39 @@ public class QuerydslBasicTest {
         assertThat(queryResults.getLimit()).isEqualTo(2);
         assertThat(queryResults.getOffset()).isEqualTo(1);
         assertThat(queryResults.getResults()).size().isEqualTo(2);  //contents
+    }
+
+    @Test
+    public void aggregation() {
+        List<Tuple> result = queryFactory
+                .select(member.count(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.age.max(),
+                        member.age.min())
+                .from(member)
+                .fetch();
+        Tuple tuple = result.get(0);
+        assertThat(tuple.get(member.count())).isEqualTo(4);
+        assertThat(tuple.get(member.age.sum())).isEqualTo(100);
+        assertThat(tuple.get(member.age.avg())).isEqualTo(25);
+        assertThat(tuple.get(member.age.max())).isEqualTo(40);
+        assertThat(tuple.get(member.age.min())).isEqualTo(10);
+    }
+
+    @Test
+    public void group() throws Exception {
+        List<Tuple> result = queryFactory
+                .select(team.name, member.age.avg())
+                .from(member)
+                .join(member.team, team)
+                .groupBy(team.name)
+                .fetch();
+        Tuple teamA = result.get(0);
+        Tuple teamB = result.get(1);
+        assertThat(teamA.get(team.name)).isEqualTo("teamA");
+        assertThat(teamA.get(member.age.avg())).isEqualTo(15);
+        assertThat(teamB.get(team.name)).isEqualTo("teamB");
+        assertThat(teamB.get(member.age.avg())).isEqualTo(35);
     }
 }
