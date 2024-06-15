@@ -2,7 +2,7 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -401,5 +401,36 @@ public class QuerydslBasicTest {
                     tuple.get(select(memberSub.age.avg())
                             .from(memberSub)));
         }
+    }
+
+    /**
+     * case 문
+     * 가급적이면 0살, 20살 등등 전환하고 바꾸는 부분은 db에서 하지말고
+     * presentation, application level에서 사용하는 것이 좋다
+     */
+    @Test
+    public void basicCase(){
+        List<String> result = queryFactory
+                .select(member.age
+                        .when(10).then("열살")
+                        .when(20).then("스무살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void complexCase(){
+        queryFactory
+                .select(new CaseBuilder()
+                        .when(member.age.between(0, 20)).then("0~20살")
+                        .when(member.age.between(21, 30)).then("21~31살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
     }
 }
