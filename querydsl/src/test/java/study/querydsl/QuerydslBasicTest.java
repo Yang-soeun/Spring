@@ -49,4 +49,41 @@ public class QuerydslBasicTest {
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
+
+    /**
+     * 제공하는 더 많은 검색 조건 쿼리는 강의자료 참고
+     */
+    @Test
+    public void search(){
+        Member fidnMember = queryFactory
+                .selectFrom(member) //selectFrom으로 합치기 가능
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void searchBetween(){
+        Member fidnMember = queryFactory
+                .selectFrom(member) //selectFrom으로 합치기 가능
+                .where(member.username.eq("member1")
+                        .and(member.age.between(10, 30)))
+                .fetchOne();
+
+        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void searchAndParam(){
+        Member fidnMember = queryFactory
+                .selectFrom(member) //selectFrom으로 합치기 가능
+                .where( //and -> , 로 가능
+                        member.username.eq("member1")
+                        ,member.age.eq(10))
+                .fetchOne();
+
+        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+    }
 }
