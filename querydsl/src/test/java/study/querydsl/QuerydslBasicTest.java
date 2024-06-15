@@ -2,6 +2,7 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -14,8 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.querydsl.entity.Member;
+import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
 
+import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
@@ -28,7 +31,7 @@ public class QuerydslBasicTest {
     JPAQueryFactory queryFactory;
 
     @BeforeEach
-    public void before(){
+    public void before() {
         queryFactory = new JPAQueryFactory(em);
 
         Team teamA = new Team("teamA");
@@ -47,7 +50,7 @@ public class QuerydslBasicTest {
     }
 
     @Test
-    public void startQuerydsl(){
+    public void startQuerydsl() {
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
@@ -61,7 +64,7 @@ public class QuerydslBasicTest {
      * 제공하는 더 많은 검색 조건 쿼리는 강의자료 참고
      */
     @Test
-    public void search(){
+    public void search() {
         Member fidnMember = queryFactory
                 .selectFrom(member) //selectFrom으로 합치기 가능
                 .where(member.username.eq("member1")
@@ -72,7 +75,7 @@ public class QuerydslBasicTest {
     }
 
     @Test
-    public void searchBetween(){
+    public void searchBetween() {
         Member fidnMember = queryFactory
                 .selectFrom(member) //selectFrom으로 합치기 가능
                 .where(member.username.eq("member1")
@@ -83,19 +86,19 @@ public class QuerydslBasicTest {
     }
 
     @Test
-    public void searchAndParam(){
+    public void searchAndParam() {
         Member fidnMember = queryFactory
                 .selectFrom(member) //selectFrom으로 합치기 가능
                 .where( //and -> , 로 가능
                         member.username.eq("member1")
-                        ,member.age.eq(10))
+                        , member.age.eq(10))
                 .fetchOne();
 
         AssertionsForClassTypes.assertThat(fidnMember.getUsername()).isEqualTo("member1");
     }
 
     @Test
-    public void resultFetch(){
+    public void resultFetch() {
         /**
          * 리스트 조회, 데이터 없으면 빈 리스트 반환
          */
@@ -140,7 +143,7 @@ public class QuerydslBasicTest {
     }
 
     @Test
-    public void sort(){
+    public void sort() {
         em.persist(new Member(null, 100));
         em.persist(new Member("member5", 100));
         em.persist(new Member("member6", 100));
@@ -157,7 +160,7 @@ public class QuerydslBasicTest {
     }
 
     @Test
-    public void paging1(){
+    public void paging1() {
         List<Member> result = queryFactory
                 .selectFrom(member)
                 .orderBy(member.username.desc())
@@ -171,13 +174,11 @@ public class QuerydslBasicTest {
     //전체 조회 수
 
     /**
-     * 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리
-     * 는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두 조인을 해버리기
-     * 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별
-     * 도로 작성해야 한다
+     * 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리 는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이
+     * 모두 조인을 해버리기 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별 도로 작성해야 한다
      */
     @Test
-    public void paging2(){
+    public void paging2() {
         QueryResults<Member> queryResults = queryFactory
                 .selectFrom(member)
                 .orderBy(member.username.desc())
@@ -242,8 +243,7 @@ public class QuerydslBasicTest {
     }
 
     /**
-     * 세타 조인(연관관계가 없는 필드로 조인)
-     * 회원의 이름이 팀 이름과 같은 회원 조회
+     * 세타 조인(연관관계가 없는 필드로 조인) 회원의 이름이 팀 이름과 같은 회원 조회
      */
     @Test
     public void theta_join() throws Exception {
@@ -278,8 +278,7 @@ public class QuerydslBasicTest {
     }
 
     /**
-     * 2. 연관관계 없는 엔티티 외부 조인
-     * 회원의 이름과 팀의 이름이 같은 대상 외부 조인
+     * 2. 연관관계 없는 엔티티 외부 조인 회원의 이름과 팀의 이름이 같은 대상 외부 조인
      */
     @Test
     public void join_on_no_relation() throws Exception {
@@ -296,10 +295,11 @@ public class QuerydslBasicTest {
     }
 
 
-    @PersistenceUnit EntityManagerFactory emf;  //entityManger를 만드는 factory
+    @PersistenceUnit
+    EntityManagerFactory emf;  //entityManger를 만드는 factory
 
     @Test
-    public void fetchJoinNo(){
+    public void fetchJoinNo() {
         em.flush();
         em.clear();
 
@@ -308,12 +308,13 @@ public class QuerydslBasicTest {
                 .where(member.username.eq("member1"))
                 .fetchOne();
 
-        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam());//이미 로딩된 엔티티 인지 로딩이(초기화) 안된 엔티티인지 알려줌
+        boolean loaded = emf.getPersistenceUnitUtil()
+                .isLoaded(findMember.getTeam());//이미 로딩된 엔티티 인지 로딩이(초기화) 안된 엔티티인지 알려줌
         assertThat(loaded).as("패치 조인 미적용").isFalse();
     }
 
     @Test
-    public void fetchJoinUse(){
+    public void fetchJoinUse() {
         em.flush();
         em.clear();
 
@@ -325,5 +326,80 @@ public class QuerydslBasicTest {
 
         boolean loaded = emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam());
         assertThat(loaded).as("패치 조인 미적용").isTrue();
+    }
+
+    /**
+     * 서브 쿼리: com.querydsl.jpa.JPAExpressions 사용
+     */
+
+    // 나이가 가장 많은 회원 조회
+    @Test
+    public void subQuery() throws Exception {
+        QMember memberSub = new QMember("memberSub");   //서브쿼리는 alias가 달라야 해서 이렇게 해줘야 함
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .where(member.age.eq(
+                        select(memberSub.age.max())
+                                .from(memberSub)
+                ))
+                .fetch();
+
+        assertThat(result).extracting("age")
+                .containsExactly(40);
+    }
+
+    // 나이가 평균 나이 이상인 회원
+    @Test
+    public void subQueryGoe() throws Exception {
+        QMember memberSub = new QMember("memberSub");
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .where(member.age.goe(  //goe: 이상
+                        select(memberSub.age.avg())
+                                .from(memberSub)
+                ))
+                .fetch();
+
+        assertThat(result).extracting("age")
+                .containsExactly(30, 40);
+    }
+
+    //in 사용, where절 서브쿼리
+    @Test
+    public void subQueryIn() throws Exception {
+        QMember memberSub = new QMember("memberSub");
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .where(member.age.in(
+                        select(memberSub.age)
+                                .from(memberSub)
+                                .where(memberSub.age.gt(10))    //gt: 초과
+                ))
+                .fetch();
+
+        assertThat(result).extracting("age")
+                .containsExactly(20, 30, 40);
+    }
+
+    //select 절에 subquery
+    public void selectSubQuery(){
+        QMember memberSub = new QMember("memberSub");
+
+        List<Tuple> fetch = queryFactory
+                .select(member.username,
+                        select(memberSub.age.avg())
+                                .from(memberSub)
+                ).from(member)
+                .fetch();
+
+        for (Tuple tuple : fetch) {
+            System.out.println("username = " + tuple.get(member.username));
+            System.out.println("age = " +
+                    tuple.get(select(memberSub.age.avg())
+                            .from(memberSub)));
+        }
     }
 }
