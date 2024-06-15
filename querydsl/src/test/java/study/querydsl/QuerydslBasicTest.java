@@ -6,13 +6,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.Team;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
 
 @Transactional
@@ -49,7 +50,7 @@ public class QuerydslBasicTest {
                 .where(member.username.eq("member1"))//파라미터 바인딩 처리
                 .fetchOne();
 
-        assertThat(findMember.getUsername()).isEqualTo("member1");
+        AssertionsForClassTypes.assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 
     /**
@@ -63,7 +64,7 @@ public class QuerydslBasicTest {
                         .and(member.age.eq(10)))
                 .fetchOne();
 
-        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+        AssertionsForClassTypes.assertThat(fidnMember.getUsername()).isEqualTo("member1");
     }
 
     @Test
@@ -74,7 +75,7 @@ public class QuerydslBasicTest {
                         .and(member.age.between(10, 30)))
                 .fetchOne();
 
-        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+        AssertionsForClassTypes.assertThat(fidnMember.getUsername()).isEqualTo("member1");
     }
 
     @Test
@@ -86,7 +87,7 @@ public class QuerydslBasicTest {
                         ,member.age.eq(10))
                 .fetchOne();
 
-        assertThat(fidnMember.getUsername()).isEqualTo("member1");
+        AssertionsForClassTypes.assertThat(fidnMember.getUsername()).isEqualTo("member1");
     }
 
     @Test
@@ -133,5 +134,22 @@ public class QuerydslBasicTest {
                 .selectFrom(member)
                 .fetchCount();
 
+    }
+
+    @Test
+    public void sort(){
+        em.persist(new Member(null, 100));
+        em.persist(new Member("member5", 100));
+        em.persist(new Member("member6", 100));
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .where(member.age.eq(100))
+                .orderBy(member.age.desc(), member.username.asc().nullsLast())
+                .fetch();
+
+        assertThat(result).hasSize(3)
+                .extracting("username")
+                .containsExactly("member5", "member6", null);
     }
 }
