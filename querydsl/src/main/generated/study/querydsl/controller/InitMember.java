@@ -15,7 +15,6 @@ import study.querydsl.entity.Team;
 @RequiredArgsConstructor
 public class InitMember {
     private final InitMemberService initMemberService;
-
     @PostConstruct
     public void init() {
         initMemberService.init();
@@ -32,7 +31,7 @@ public class InitMember {
 
             for (int i = 0; i < 100; i++) {
                 Team selectedTeam = i % 2 == 0 ? teamA : teamB;
-                em.persist(new Member[]("member" + i, i, selectedTeam));
+                em.persist(new Member("member" + i, i, selectedTeam));
             }
         }
     }
